@@ -5,7 +5,7 @@
 # @author Myles McNamara
 # @date 05/15/2013
 # @version 1.5
-# @source http://github.com/tripflex/inodes
+# @source https://gh.smyl.es/inodes
 # @description Check the amount of inodes (files) in a given directory.
 # ------------------------------------------------------------------------------------------
 # @usage ./inodes <path>
