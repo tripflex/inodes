@@ -1,0 +1,69 @@
+#!/bin/sh
+#
+# @title inodes
+# ------------------------------------------------------------------------------------------
+# @author Myles McNamara
+# @date 05/15/2013
+# @version 1.5
+# @source http://github.com/tripflex/inodes
+# @description Check the amount of inodes (files) in a given directory.
+# ------------------------------------------------------------------------------------------
+# @usage ./inodes <path>
+# ------------------------------------------------------------------------------------------
+# @copyright Copyright (C) 2013  Myles McNamara
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+# ------------------------------------------------------------------------------------------
+
+if [ "$1" = "-h" ] || [ "$1" = "--help" ] || [[ $1 == -* ]]; then
+ 	echo "Usage: $0 <path>" >&2
+ 	exit
+fi
+
+# If user doesn't specify path or uses . then set variable to pwd
+if [ "$1" = "." ] || [ "$#" -lt 1 ]; then
+	CURDIR=`pwd`
+else
+	CURDIR="$1"
+fi
+
+# backup and change IFS to prevent problems with spaces in paths or file names
+OLDIFS=$IFS
+IFS=$'\n'
+
+GET_SIZE(){
+	du -hs $1 |cut -f 1
+}
+GET_COUNT(){
+	find $1 |wc -l
+}
+SHOW_LINE(){
+	echo "-----------------------------------------------------"
+}
+clear
+printf "\t\tINODE USAGE SUMMARY\n"
+SHOW_LINE
+printf "INODES\t | SIZE\t | SUB-DIRECTORY\n"
+SHOW_LINE
+	for DIR in `find $CURDIR -maxdepth 1 -type d |grep -xv $CURDIR |sort`; do 
+	COUNT=$(GET_COUNT $DIR)
+	SIZE=$(GET_SIZE $DIR)
+	printf "$COUNT\t | $SIZE\t | `basename $DIR`\n"
+	done 
+SHOW_LINE	
+printf "$(GET_COUNT $CURDIR)\t | $(GET_SIZE $CURDIR)\t | $CURDIR\n"
+SHOW_LINE
+
+# restore IFS
+IFS=$OLDIFS
