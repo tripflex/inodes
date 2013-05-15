@@ -5,7 +5,7 @@ Shell/Bash script to display inode count and directory size
 
 ## Installation
 ``` bash
-wget https://raw.github.com/tripflex/inodes/master/inodes ~/bin/inodes
+wget -O ~/bin/inodes https://gh.smyl.es/inodes/master/inodes
 chmod +x ~/bin/inodes
 ```
 
