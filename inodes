@@ -3,8 +3,8 @@
 # @title inodes
 # ------------------------------------------------------------------------------------------
 # @author Myles McNamara
-# @date 05/15/2013
-# @version 1.5
+# @date 11/26/2013
+# @version 1.6
 # @source https://gh.smyl.es/inodes
 # @description Check the amount of inodes (files) in a given directory.
 # ------------------------------------------------------------------------------------------
@@ -25,6 +25,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------------------
+
+TREEIFGT=10000
 
 if [ "$1" = "-h" ] || [ "$1" = "--help" ] || [[ $1 == -* ]]; then
  	echo "Usage: $0 <path>" >&2
@@ -57,9 +59,18 @@ SHOW_LINE
 printf "INODES\t | SIZE\t | SUB-DIRECTORY\n"
 SHOW_LINE
 	for DIR in `find $CURDIR -maxdepth 1 -type d |grep -xv $CURDIR |sort`; do 
-	COUNT=$(GET_COUNT $DIR)
-	SIZE=$(GET_SIZE $DIR)
-	printf "$COUNT\t | $SIZE\t | `basename $DIR`\n"
+		COUNT=$(GET_COUNT $DIR)
+		SIZE=$(GET_SIZE $DIR)
+		printf "$COUNT\t | $SIZE\t | `basename $DIR`\n"
+
+		if [ $COUNT -gt $TREEIFGT ]
+		then
+			for TREEDIR in `find $DIR -maxdepth 1 -type d |grep -xv $DIR |sort`; do 
+				TREECOUNT=$(GET_COUNT $TREEDIR)
+				TREESIZE=$(GET_SIZE $TREEDIR)
+				printf "$TREECOUNT\t | $TREESIZE\t | ** `basename $TREEDIR`\n"
+			done 
+		fi
 	done 
 SHOW_LINE	
 printf "$(GET_COUNT $CURDIR)\t | $(GET_SIZE $CURDIR)\t | $CURDIR\n"
