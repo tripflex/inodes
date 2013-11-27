@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # @title inodes
 # ------------------------------------------------------------------------------------------
@@ -26,19 +26,77 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------------------
 
-TREEIFGT=10000
+# Define help function
+function help(){
+    echo "inodes - Count the amount of inodes in a given directory";
+    echo "Usage example:";
+    echo "inodes (-d|--dir) string [(-h|--help)] [(-t|--tree) integer]";
+    echo "Options:";
+    echo "-h or --help: Displays this information.";
+    echo "-d or --dir string: Directory to scan and count inodes. Required.";
+    echo "-t or --tree integer: Show tree structure above X inodes.";
+    exit 1;
+}
 
-if [ "$1" = "-h" ] || [ "$1" = "--help" ] || [[ $1 == -* ]]; then
- 	echo "Usage: $0 <path>" >&2
- 	exit
+# Declare vars. Flags initalizing to 0.
+
+# Execute getopt
+ARGS=$(getopt -o "hd:t:" -l "help,dir:,tree:" -n "inodes" -- "$@");
+
+#Bad arguments
+if [ $? -ne 0 ];
+then
+    help;
 fi
 
-# If user doesn't specify path or uses . then set variable to pwd
-if [ "$1" = "." ] || [ "$#" -lt 1 ]; then
-	CURDIR=`pwd`
+eval set -- "$ARGS";
+
+while true; do
+    case "$1" in
+        -h|--help)
+            shift;
+            help;
+            ;;
+        -d|--dir)
+            shift;
+                    if [ -n "$1" ]; 
+                    then
+                        dir="$1";
+                        shift;
+                    fi
+            ;;
+        -t|--tree)
+            shift;
+                    if [ -n "$1" ]; 
+                    then
+                        tree="$1";
+                        shift;
+                    fi
+            ;;
+
+        --)
+            shift;
+            break;
+            ;;
+    esac
+done
+
+# Check required arguments
+if [ -z "$dir" ]
+then
+    echo "dir not specified, using pwd";
+    CURDIR=`pwd`;
 else
-	CURDIR="$1"
+	CURDIR=$dir;
 fi
+
+# Iterate over rest arguments called $arg
+for arg in "$@"
+do
+    # Your code here (remove example below)
+    echo $arg
+
+done
 
 # backup and change IFS to prevent problems with spaces in paths or file names
 OLDIFS=$IFS
@@ -54,26 +112,30 @@ SHOW_LINE(){
 	echo "-----------------------------------------------------"
 }
 clear
+
+format="%10s | %10s | %-20s\n"
+treeformat="%10s | %10s | %-20s\n"
+
 printf "\t\tINODE USAGE SUMMARY\n"
 SHOW_LINE
-printf "INODES\t | SIZE\t | SUB-DIRECTORY\n"
+printf "$format" "INODES" "SIZE" "DIRECTORY"
 SHOW_LINE
 	for DIR in `find $CURDIR -maxdepth 1 -type d |grep -xv $CURDIR |sort`; do 
 		COUNT=$(GET_COUNT $DIR)
 		SIZE=$(GET_SIZE $DIR)
-		printf "$COUNT\t | $SIZE\t | `basename $DIR`\n"
+		printf "$format" "$COUNT" "$SIZE" "`basename $DIR`"
 
-		if [ $COUNT -gt $TREEIFGT ]
+		if [[ -n $tree && $COUNT -gt $tree ]]
 		then
 			for TREEDIR in `find $DIR -maxdepth 1 -type d |grep -xv $DIR |sort`; do 
 				TREECOUNT=$(GET_COUNT $TREEDIR)
 				TREESIZE=$(GET_SIZE $TREEDIR)
-				printf "$TREECOUNT\t | $TREESIZE\t | ** `basename $TREEDIR`\n"
+				printf "$treeformat" "$TREECOUNT" "$TREESIZE" "--`basename $TREEDIR`"
 			done 
 		fi
 	done 
 SHOW_LINE	
-printf "$(GET_COUNT $CURDIR)\t | $(GET_SIZE $CURDIR)\t | $CURDIR\n"
+printf "$format" "$(GET_COUNT $CURDIR)" "$(GET_SIZE $CURDIR)" "$CURDIR"
 SHOW_LINE
 
 # restore IFS
