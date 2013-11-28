@@ -125,7 +125,7 @@ done
 if [[ -z "$dir" && -n $1 && $1 != -* ]]
 then
     SHOW_LINE
-    printf "${RED}[CONFIG] Arguments not used, directory specified as $1\n{$NORMAL}"
+    printf "${RED}[CONFIG] Arguments not used, directory specified as $1 $NORMAL \n"
     CURDIR=$1;
 elif [[ -z "$dir" ]]
 then
