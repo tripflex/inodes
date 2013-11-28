@@ -1,9 +1,29 @@
 inodes
 ======================
 
-Shell/Bash script to count and display directory inode usage, and size.  This script will allow you to generate a report of inode usage based off arguments/parameters that you supply.
-
-Prior to 2.0 release a few new features have been added:
+<table border="0">
+<tr>
+<td width="60%"><h3>inodes</h3>is a Shell/Bash script to count and display directory inode (each file) usage, and size. 
+<br />
+<h4>Features Include:</h4>
+<ul>
+<li>Output full directory report</li>
+<li>Filter out directories based on inode size</li>
+<li>Include tree view of directories based on inode size</li>
+</ul>
+<h4>Upcoming Features:</h4>
+<ul>
+<li>Output report to HTML file</li>
+<li>Enhanced tree view to support extended depth</li>
+<li>Watch argument to add cronjob and notify by email</li>
+</ul>
+<a href="mailto:myles@hostt.net">Got an idea?</a>
+</td>
+<td width="40%">
+<p align="center"><a href="https://smyl.es/img/Selection-381x794-01.png" target="_blank"><img src="https://smyl.es/img/Selection_022.png"></a></p>
+</td>
+</tr>
+</table>
 
 Tree display will allow you show sub-directories in the output that have over a specific number of inodes.  So if you want a directory with over 50,000 inodes to display the sub-directories in a tree format, use the -t argument.
 
