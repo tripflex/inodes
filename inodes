@@ -11,17 +11,17 @@
 # @usage ./inodes (-d|--dir) string [(-h|--help)] [(-t|--tree) integer] [(-e|--exclude) integer]
 # ------------------------------------------------------------------------------------------
 # @copyright Copyright (C) 2013  Myles McNamara
-# 
+#
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 # ------------------------------------------------------------------------------------------
@@ -85,7 +85,7 @@ while true; do
             ;;
         -d|--dir)
             shift;
-                    if [ -n "$1" ]; 
+                    if [ -n "$1" ];
                     then
                         dir="$1";
                         SHOW_LINE
@@ -95,7 +95,7 @@ while true; do
             ;;
         -t|--tree)
             shift;
-                    if [ -n "$1" ]; 
+                    if [ -n "$1" ];
                     then
                         tree="$1";
                         SHOW_LINE
@@ -105,7 +105,7 @@ while true; do
             ;;
         -e|--exclude)
             shift;
-                    if [ -n "$1" ]; 
+                    if [ -n "$1" ];
                     then
                         exclude="$1";
                         SHOW_LINE
@@ -127,7 +127,7 @@ then
     SHOW_LINE
     printf "${RED}[CONFIG] Arguments not used, directory specified as $1 $NORMAL \n"
     CURDIR=$1;
-elif [[ -z "$dir" ]]
+elif [[ -z "$dir" || "$dir" == "." ]]
 then
     CURDIR=`pwd`;
     SHOW_LINE
@@ -149,7 +149,7 @@ printf "\tINODE USAGE SUMMARY\n"
 SHOW_LINE
 printf "$header" "    INODES" "      SIZE" "DIRECTORY"
 SHOW_LINE
-	for DIR in `find $CURDIR -maxdepth 1 -type d |grep -xv $CURDIR |sort`; do 
+	for DIR in `find $CURDIR -maxdepth 1 -type d |grep -xv $CURDIR |sort`; do
 		COUNT=$(GET_COUNT $DIR)
 		SIZE=$(GET_SIZE $DIR)
 
@@ -162,7 +162,7 @@ SHOW_LINE
         # Check for tree arg, and output sub-directory inode count if above tree parameter
 		if [[ -n $tree && $COUNT -gt $tree ]]
 		then
-			for TREEDIR in `find $DIR -maxdepth 1 -type d |grep -xv $DIR |sort`; do 
+			for TREEDIR in `find $DIR -maxdepth 1 -type d |grep -xv $DIR |sort`; do
 				TREECOUNT=$(GET_COUNT $TREEDIR)
 				TREESIZE=$(GET_SIZE $TREEDIR)
                 # Check for exclude arg on tree output
@@ -170,10 +170,10 @@ SHOW_LINE
                 then
 				    printf "$treeformat" "  --$TREECOUNT" "  --$TREESIZE" "--`basename $TREEDIR`"
                 fi
-			done 
+			done
 		fi
 	done
-SHOW_LINE	
+SHOW_LINE
 printf "$header" "$(GET_COUNT $CURDIR)" "$(GET_SIZE $CURDIR)" "$CURDIR"
 SHOW_LINE
 
