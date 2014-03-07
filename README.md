@@ -13,8 +13,11 @@ inodes
 </ul>
 <h4>Upcoming Features:</h4>
 <ul>
+<li>Cleaner UI output</li>
+<li>Update check (maybe)</li>
+<li>New shorthand arg (ie "-et 1000" same as "-e 1000 -t 1000")</li>
 <li>Output report to HTML file</li>
-<li>Enhanced tree view to support extended depth</li>
+<li>Enhanced tree view to support extended depth (in dev)</li>
 <li>Watch argument to add cronjob and notify by email</li>
 </ul>
 <a href="mailto:myles@hostt.net">Got an idea?</a>
