@@ -62,7 +62,6 @@ NORMAL=$(tput sgr0)
 BLINK=$(tput blink)
 REVERSE=$(tput smso)
 UNDERLINE=$(tput smul)
-clear
 
 # Declare vars. Flags initalizing to 0.
 
@@ -120,6 +119,8 @@ while true; do
             ;;
     esac
 done
+
+clear
 
 # Check required arguments
 if [[ -z "$dir" && -n $1 && $1 != -* ]]
